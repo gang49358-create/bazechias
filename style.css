@@ -835,7 +835,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 /* BAZE CHINA — full product photography + Poizon-style brand directory */
 .product-image{height:300px!important;min-height:300px!important;display:grid!important;place-items:center!important;overflow:hidden!important;position:relative!important;background:radial-gradient(ellipse at 50% 48%,#18365f 0%,#0b1d3a 72%)!important}
 .product-image img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;padding:18px!important;box-sizing:border-box!important;transform:none!important;mix-blend-mode:normal!important;filter:drop-shadow(0 16px 18px #00102b88)!important}
-.product-card:hover .product-image img{transform:scale(1.025)!important;filter:drop-shadow(0 20px 22px #00102baa)!important}
+.product-card:hover .product-image img{transform:none!important;filter:drop-shadow(0 20px 22px #00102baa)!important}
 .product-image:before{pointer-events:none!important}
 .product-image.image-unavailable:after{content:"ФОТО НЕДОСТУПНО";position:absolute;inset:auto 12px 12px;text-align:center;color:#a9c7ee;font-size:9px;letter-spacing:1px}
 .brand-filter-wrap{margin:24px 0 12px;padding:18px 0 16px;border-top:1px solid #24446f;border-bottom:1px solid #24446f}
