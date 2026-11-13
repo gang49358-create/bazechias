@@ -358,3 +358,35 @@ button:disabled,.button:disabled,input[type="submit"]:disabled {background:#222 
 
 /* BAZE promo-code module */
 .promo-box{margin:18px 0 14px;padding:16px;background:linear-gradient(135deg,#111d33,#0a1221);border:1px solid #8eafff38;border-radius:4px}.promo-box>label{display:block;margin-bottom:9px;color:#b8c9eb;font-size:9px;font-weight:800;letter-spacing:.18em}.promo-row{display:flex;gap:8px}.promo-row input{min-width:0;flex:1;padding:12px 13px;background:#070d18;color:#edf3ff;border:1px solid #425474;border-radius:2px;font:600 12px Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase}.promo-row button{padding:0 14px;background:#000;color:#fff;border:1px solid #000;border-radius:2px;font:700 10px Manrope,sans-serif;letter-spacing:.06em}.promo-box small{display:block;margin-top:9px;color:#91a3c3;font-size:10px;line-height:1.5}.promo-discount-line{margin-top:8px;color:#b9d0ff;font-size:11px;font-weight:700}.promo-row button:disabled{opacity:.55}
+
+
+/* BAZE CHINA — premium promo experience */
+.promo-box{position:relative;overflow:hidden;margin:20px 0 16px;padding:19px;background:radial-gradient(ellipse at 100% 0%,#243c69 0%,transparent 52%),linear-gradient(135deg,#111d32,#080e19 72%);border:1px solid #7898d455;border-radius:7px;box-shadow:inset 0 1px #d9e5ff12,0 14px 35px #0004}
+.promo-box:before{content:"BC / REWARDS";position:absolute;right:14px;top:13px;color:#d8e5ff25;font-size:8px;font-weight:800;letter-spacing:.2em;pointer-events:none}
+.promo-box>label{display:block;margin:0 0 12px;color:#dce7ff;font-size:10px;font-weight:800;letter-spacing:.2em}
+.promo-row{position:relative;display:flex;gap:9px}
+.promo-row input{height:46px;padding:0 14px;background:#070d18!important;color:#f2f6ff!important;border:1px solid #6e88b866!important;border-radius:4px;font:700 12px Manrope,sans-serif;letter-spacing:.15em;text-transform:uppercase}
+.promo-row input:focus{border-color:#b7ceff!important;box-shadow:0 0 0 3px #9dbaff18}
+.promo-row button{min-width:112px;padding:0 15px;background:linear-gradient(135deg,#e1eaff,#9eb7ed)!important;color:#07101e!important;border:1px solid #c7d8ff!important;border-radius:4px;font:800 10px Manrope,sans-serif;letter-spacing:.08em;transition:transform .2s,filter .2s}
+.promo-row button:hover{background:linear-gradient(135deg,#fff,#b6caff)!important;color:#07101e!important;transform:translateY(-1px);filter:brightness(1.04)}
+.promo-box small{display:block;margin-top:10px;color:#9eafcf;font-size:10px;line-height:1.5}
+.promo-discount-line{margin-top:10px;padding:10px 12px;background:#a9c2ff12;border:1px solid #a9c2ff35;border-radius:4px;color:#d8e5ff;font-size:11px;font-weight:800;letter-spacing:.04em}
+.promo-admin-intro{margin:0 0 20px;padding:22px;background:radial-gradient(ellipse at 100% 0%,#263f70 0%,transparent 58%),linear-gradient(135deg,#101d33,#080e19);border:1px solid #7898d444;border-radius:7px}
+.promo-admin-kicker{color:#9eb9ed;font-size:9px;font-weight:800;letter-spacing:.2em}
+.promo-admin-intro h3{margin:10px 0 6px;color:#f0f5ff;font-size:24px;letter-spacing:-.04em}
+.promo-admin-intro h3 span{color:#9eb9ed}
+.promo-admin-intro p{margin:0;color:#9eacc4;font-size:12px}
+.promo-admin-form{padding:18px;background:#0d1626;border:1px solid #8ba9df2c;border-radius:6px}
+.promo-admin-form button{grid-column:1/-1}
+.promo-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:18px}
+.promo-admin-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:9px;padding:17px;background:radial-gradient(ellipse at 100% 0%,#1e3458 0%,transparent 55%),linear-gradient(145deg,#111d31,#080e18);border:1px solid #8ba9df35;border-radius:6px;box-shadow:0 12px 28px #0003}
+.promo-admin-card:after{content:"";position:absolute;right:-25px;bottom:-44px;width:120px;height:120px;border:1px solid #a9c2ff18;border-radius:50%;box-shadow:0 0 0 15px #a9c2ff08,0 0 0 30px #a9c2ff05;pointer-events:none}
+.promo-admin-card-top{display:flex;align-items:center;justify-content:space-between;color:#9eb5df;font-size:8px;font-weight:800;letter-spacing:.16em}
+.promo-admin-card-top b{color:#dce8ff;font-size:21px;letter-spacing:-.05em}
+.promo-admin-code{color:#f3f6ff;font-size:21px;letter-spacing:.13em}
+.promo-admin-usage,.promo-admin-expiry{color:#9eacc4;font-size:10px}
+.promo-admin-card.is-paused{opacity:.7;filter:saturate(.55)}
+.promo-admin-actions{position:relative;z-index:1;display:flex;gap:8px;margin-top:8px}
+.promo-admin-actions button{padding:9px 11px;background:#172640!important;color:#dce7ff!important;border:1px solid #7f9acb55!important;border-radius:3px;font-size:9px;font-weight:800}
+.promo-admin-actions button:last-child{background:#211923!important;border-color:#674958!important;color:#f0cbd8!important}
+@media(max-width:520px){.promo-row{flex-direction:column}.promo-row button{min-height:43px}.promo-admin-intro{padding:17px}.promo-admin-form{padding:13px}}
