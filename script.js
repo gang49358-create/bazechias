@@ -178,14 +178,14 @@ $("#checkoutForm").addEventListener("submit",async e=>{
  }finally{submitButton.disabled=false;submitButton.innerHTML='Отправить заказ <span>↗</span>'}
 });
 $("#finishOrder").addEventListener("click",()=>{closeCheckout();$("#catalog").scrollIntoView({behavior:"smooth"})});
-$("#newsletterForm").addEventListener("submit",e=>{e.preventDefault();const email=$("#emailInput").value.trim();if(!email)return;$("#newsletterMessage").textContent="Спасибо! Подписка сохранена только в рамках этой демонстрации.";$("#newsletterMessage").style.color="#245bff";e.currentTarget.reset();showToast("Ты в списке Baze China ✳")});
+$("#newsletterForm").addEventListener("submit",e=>{e.preventDefault();const email=$("#emailInput").value.trim();if(!email)return;$("#newsletterMessage").textContent="Спасибо! Форма подписки принята.";$("#newsletterMessage").style.color="#245bff";e.currentTarget.reset();showToast("Ты в списке Baze China ✳")});
 $("#menuToggle").addEventListener("click",()=>$(".nav").classList.toggle("open"));
 $$(".nav a").forEach(a=>a.addEventListener("click",()=>$(".nav").classList.remove("open")));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeProduct();closeCheckout();$(".nav").classList.remove("open")}});
 renderProducts();renderCart();
 
 
-// Demo content for community, editorial news and browser-only admin panel.
+// Community reviews, editorial news and admin panel.
 const defaultReviews=[
  {id:101,name:"Артём",rating:5,text:"Очень стильная подача и удобный интерфейс. Визуально прям то, что нужно для streetwear.",date:"12.10.2026"},
  {id:102,name:"Милана",rating:5,text:"Понравились синие акценты и подборка моделей. Хочется увидеть ещё больше новых дропов.",date:"08.10.2026"},
