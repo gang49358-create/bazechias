@@ -72,6 +72,7 @@ let activeCategory = "all", searchTerm = "", sortMode = "featured";
 let cart = JSON.parse(localStorage.getItem("bazeCart") || "[]");
 let favorites = JSON.parse(localStorage.getItem("bazeFavorites") || "[]");
 let currentProduct = null, selectedSize = 42, toastTimer;
+let appliedPromo = null; // Initialize before the first renderCart() call.
 
 function saveCart(){ localStorage.setItem("bazeCart",JSON.stringify(cart)); }
 function saveFavorites(){ localStorage.setItem("bazeFavorites",JSON.stringify(favorites)); }
@@ -199,7 +200,6 @@ const defaultNews=[
 let reviews=[];
 let newsItems=[];
 let adminTab="products";
-let appliedPromo=null;
 function promoDiscount(){return appliedPromo?Math.round(cartTotal()*appliedPromo.discount_percent/100):0;}
 function promoCodeValue(){return String($("#promoCodeInput")?.value||"").trim().toUpperCase();}
 function mapNewsRow(row){
