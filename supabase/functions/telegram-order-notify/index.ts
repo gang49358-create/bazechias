@@ -1,7 +1,7 @@
 // Supabase Edge Function: telegram-order-notify
 // Trigger this function from a Database Webhook on INSERT into public.orders.
 // Required secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_IDS, WEBHOOK_SECRET.
-// The Supabase secret API key is read from the platform-provided SUPABASE_SECRET_KEYS map.
+// Required custom Supabase Edge Function secret: BAZE_SERVICE_KEY (your secret API key).
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-webhook-secret",
@@ -25,13 +25,7 @@ Deno.serve(async (req: Request) => {
     .split(",").map((id) => id.trim()).filter(Boolean);
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
 
-  let secretKey = "";
-  try {
-    const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
-    secretKey = secretKeys["baze_server"] ?? "";
-  } catch {
-    console.error("Could not read SUPABASE_SECRET_KEYS");
-  }
+  const secretKey = Deno.env.get("BAZE_SERVICE_KEY") ?? "";
 
   if (!botToken || !chatIds.length || !supabaseUrl || !secretKey) {
     return new Response("Server configuration is incomplete", { status: 500, headers: corsHeaders });
