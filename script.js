@@ -76,7 +76,24 @@ async function seedProductsIfEmpty(){
   await refreshProductsFromDb();
 }
 let activeCategory = "all", activeBrand = "all", searchTerm = "", sortMode = "featured";
-let cart = JSON.parse(localStorage.getItem("bazeCart") || "[]");
+// Normalize older or malformed saved cart entries before checkout.
+let cart = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem("bazeCart") || "[]");
+    if (!Array.isArray(saved)) return [];
+    return saved.map(item => ({
+      id: Number(item?.id),
+      size: Number(item?.size),
+      qty: Math.max(1, Math.floor(Number(item?.qty ?? item?.quantity ?? 1)))
+    })).filter(item =>
+      Number.isSafeInteger(item.id) && item.id > 0 &&
+      Number.isFinite(item.size) && item.size > 0 &&
+      Number.isSafeInteger(item.qty) && item.qty > 0
+    );
+  } catch {
+    return [];
+  }
+})();
 let favorites = JSON.parse(localStorage.getItem("bazeFavorites") || "[]");
 let currentProduct = null, selectedSize = 42, toastTimer;
 let appliedPromo = null; // Initialize before the first renderCart() call.
@@ -166,7 +183,12 @@ $("#checkoutForm").addEventListener("submit",async e=>{
  const form=e.currentTarget;
  const submitButton=form.querySelector('button[type="submit"]');
  const data=new FormData(form);
- const items=cart.map(item=>({product_id:Number(item.id),size:Number(item.size),quantity:Number(item.qty)}));
+ const items=cart.map(item=>({
+  product_id:Number(item.id),
+  size:Number(item.size),
+  quantity:Math.max(1,Math.floor(Number(item.qty ?? item.quantity ?? 1)))
+ })).filter(item=>Number.isSafeInteger(item.product_id)&&item.product_id>0&&Number.isFinite(item.size)&&item.size>0&&Number.isSafeInteger(item.quantity)&&item.quantity>0);
+ if(!items.length || items.length!==cart.length){showToast("В корзине есть некорректный товар. Очисти корзину и добавь товары заново.");return}
  submitButton.disabled=true;submitButton.textContent="Сохраняем заказ…";
  try{
   const orderArgs={
