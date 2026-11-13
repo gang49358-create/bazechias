@@ -36,11 +36,18 @@ let isAdmin = false;
 let productsLoadedFromDb = false;
 const fallbackProducts = products.map(p => ({...p, sizes:[...p.sizes]}));
 
+function inferProductBrand(product){
+ const raw=String(product?.brand||"").trim();
+ if(raw)return raw;
+ const hay=(String(product?.name||"")+" "+String(product?.type||"")).toLowerCase();
+ const brands=[["Nike",/\\bnike\\b/],["Adidas",/adidas/],["New Balance",/new\\s*balance/],["ASICS",/asics/],["Puma",/puma/],["Jordan",/jordan|\\baj\\b/],["Converse",/converse/],["Vans",/vans/],["Reebok",/reebok/],["Salomon",/salomon/],["Yeezy",/yeezy/]];
+ const found=brands.find(([,rx])=>rx.test(hay));return found?found[0]:"Другие";
+}
 function mapProductRow(row){
-  return {id:Number(row.id), name:row.name, category:row.category, type:row.type || `${String(row.category||"classic").toUpperCase()} / CUSTOM`, price:Number(row.price), oldPrice:row.old_price==null?null:Number(row.old_price), label:row.label||"NEW", desc:row.description||"", image:row.image||"", sizes:Array.isArray(row.sizes)&&row.sizes.length?row.sizes:[39,40,41,42,43,44,45]};
+  return {id:Number(row.id), name:row.name, brand:row.brand||inferProductBrand(row), category:row.category, type:row.type || `${String(row.category||"classic").toUpperCase()} / CUSTOM`, price:Number(row.price), oldPrice:row.old_price==null?null:Number(row.old_price), label:row.label||"NEW", desc:row.description||"", image:row.image||"", sizes:Array.isArray(row.sizes)&&row.sizes.length?row.sizes:[39,40,41,42,43,44,45]};
 }
 function productToRow(p){
-  return {name:p.name,category:p.category,type:p.type,price:p.price,old_price:p.oldPrice||null,label:p.label||"NEW",description:p.desc||"",image:p.image||"",sizes:p.sizes||[39,40,41,42,43,44,45]};
+  return {name:p.name,brand:inferProductBrand(p),category:p.category,type:p.type,price:p.price,old_price:p.oldPrice||null,label:p.label||"NEW",description:p.desc||"",image:p.image||"",sizes:p.sizes||[39,40,41,42,43,44,45]};
 }
 async function refreshProductsFromDb(){
   const {data,error}=await supabaseClient.from("products").select("*").order("id",{ascending:true});
@@ -68,7 +75,7 @@ async function seedProductsIfEmpty(){
   if(insertError)throw insertError;
   await refreshProductsFromDb();
 }
-let activeCategory = "all", searchTerm = "", sortMode = "featured";
+let activeCategory = "all", activeBrand = "all", searchTerm = "", sortMode = "featured";
 let cart = JSON.parse(localStorage.getItem("bazeCart") || "[]");
 let favorites = JSON.parse(localStorage.getItem("bazeFavorites") || "[]");
 let currentProduct = null, selectedSize = 42, toastTimer;
@@ -77,12 +84,21 @@ let appliedPromo = null; // Initialize before the first renderCart() call.
 function saveCart(){ localStorage.setItem("bazeCart",JSON.stringify(cart)); }
 function saveFavorites(){ localStorage.setItem("bazeFavorites",JSON.stringify(favorites)); }
 function visibleProducts(){
-  let list = products.filter(p => (activeCategory==="all" || p.category===activeCategory) && (p.name+" "+p.type+" "+p.desc).toLowerCase().includes(searchTerm.toLowerCase()));
+  let list = products.filter(p => (activeCategory==="all" || p.category===activeCategory) && (activeBrand==="all" || inferProductBrand(p)===activeBrand) && (p.name+" "+p.type+" "+p.desc+" "+inferProductBrand(p)).toLowerCase().includes(searchTerm.toLowerCase()));
   if(sortMode==="low") list.sort((a,b)=>a.price-b.price);
   if(sortMode==="high") list.sort((a,b)=>b.price-a.price);
   return list;
 }
+function renderBrandFilters(){
+ const root=$("#brandFilters");if(!root)return;
+ const brands=[...new Set(products.map(inferProductBrand))].sort((a,b)=>a.localeCompare(b,"ru"));
+ const counts=products.reduce((acc,p)=>{const b=inferProductBrand(p);acc[b]=(acc[b]||0)+1;return acc;},{});
+ const choices=[{name:"all",label:"Все бренды",count:products.length},...brands.map(name=>({name,label:name,count:counts[name]}))];
+ if(activeBrand!=="all"&&!brands.includes(activeBrand))activeBrand="all";
+ root.innerHTML=choices.map(item=>`<button class="brand-filter ${activeBrand===item.name?"active":""}" type="button" data-brand="${escapeHtml(item.name)}" aria-pressed="${activeBrand===item.name}"><span>${escapeHtml(item.label)}</span><small>${item.count}</small></button>`).join("");
+}
 function renderProducts(){
+  renderBrandFilters();
   const list=visibleProducts();
   $("#resultCount").textContent=String(list.length).padStart(2,"0")+" моделей";
   $("#productGrid").innerHTML=list.length?list.map(p=>`
@@ -90,9 +106,9 @@ function renderProducts(){
       <div class="product-image" data-view="${p.id}" tabindex="0" role="button" aria-label="Подробнее: ${p.name}">
         <span class="product-label">${p.label}</span>
         <button class="favorite ${favorites.includes(p.id)?"active":""}" data-fav="${p.id}" aria-label="Добавить ${p.name} в избранное">${favorites.includes(p.id)?"♥":"♡"}</button>
-        <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.15'">
+        <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" onerror="this.closest('.product-image')?.classList.add('image-unavailable')">
       </div>
-      <div class="product-info"><div class="product-meta"><span>${p.type}</span><span>★ 4.9</span></div>
+      <div class="product-info"><div class="product-meta"><span>${escapeHtml(inferProductBrand(p))} · ${p.type}</span><span>★ 4.9</span></div>
       <h3 class="product-name">${p.name}</h3><p class="product-desc">${p.desc}</p>
       <div class="product-bottom"><div class="price">${money(p.price)} ${p.oldPrice?`<span class="old-price">${money(p.oldPrice)}</span>`:""}</div><button class="add-btn" data-add="${p.id}" aria-label="Добавить ${p.name} в корзину">+</button></div></div>
     </article>`).join(""):`<div class="no-results"><strong>Ничего не найдено</strong>Попробуй изменить поиск или выбрать другую категорию.</div>`;
@@ -130,7 +146,8 @@ $("#productGrid").addEventListener("click",e=>{
  const view=e.target.closest("[data-view]");if(view)openProduct(Number(view.dataset.view));
 });
 $("#productGrid").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-view]")){e.preventDefault();openProduct(Number(e.target.dataset.view))}});
-$$(".filter").forEach(btn=>btn.addEventListener("click",()=>{activeCategory=btn.dataset.category;$$(".filter").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()}));
+$(".filter[data-category]").forEach(btn=>btn.addEventListener("click",()=>{activeCategory=btn.dataset.category;$(".filter[data-category]").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()}));
+$("#brandFilters")?.addEventListener("click",e=>{const btn=e.target.closest("[data-brand]");if(!btn)return;activeBrand=btn.dataset.brand;renderProducts()});
 $("#searchInput").addEventListener("input",e=>{searchTerm=e.target.value;renderProducts()});
 $(".search-open").addEventListener("click",()=>{$("#searchInput").focus();$("#catalog").scrollIntoView({behavior:"smooth"})});
 $("#sortSelect").addEventListener("change",e=>{sortMode=e.target.value;renderProducts()});
@@ -293,8 +310,8 @@ async function renderAdmin(){
  if(adminTab==="orders"){
   loadAdminOrders(root);
  }else if(adminTab==="products"){
-  root.innerHTML=`<form class="admin-form" id="adminProductForm"><label>Название<input name="name" required placeholder="Название модели"></label><label>Цена, ₽<input name="price" type="number" min="1" required placeholder="7990"></label><label>Категория<select name="category"><option value="running">Running</option><option value="street">Streetwear</option><option value="classic">Classic</option></select></label><label>URL фото<input name="image" type="url" placeholder="https://..."></label><label class="wide">Описание<textarea name="desc" rows="2" required placeholder="Коротко о модели"></textarea></label><button class="button button-primary" type="submit">Добавить товар +</button></form><div class="admin-list">${products.map(p=>`<div class="admin-list-item"><img src="${p.image}" alt=""><div class="admin-item-copy"><strong>${escapeHtml(p.name)}</strong><small>${money(p.price)} · ${p.category}</small></div><button data-admin-delete-product="${p.id}">Удалить</button></div>`).join("")}</div><p class="admin-note">Товары, новости, отзывы, заказы и промокоды управляются через Supabase.</p>`;
-  $("#adminProductForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin){showToast("Сначала войди как администратор");return}const d=new FormData(e.currentTarget);const category=d.get("category");const product={name:d.get("name").trim(),category,type:category.toUpperCase()+" / CUSTOM",price:Number(d.get("price")),oldPrice:null,label:"NEW",desc:d.get("desc").trim(),image:d.get("image").trim()||"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85",sizes:[39,40,41,42,43,44,45]};const {error}=await supabaseClient.from("products").insert(productToRow(product));if(error){console.error(error);showToast("Не удалось сохранить товар. Проверь политики Supabase");return}await refreshProductsFromDb();renderAdmin();e.currentTarget.reset();showToast("Товар сохранён в Supabase")});
+  root.innerHTML=`<form class="admin-form" id="adminProductForm"><label>Название<input name="name" required placeholder="Название модели"></label><label>Цена, ₽<input name="price" type="number" min="1" required placeholder="7990"></label><label>Бренд<select name="brand"><option>Nike</option><option>Adidas</option><option>Jordan</option><option>New Balance</option><option>ASICS</option><option>Puma</option><option>Converse</option><option>Vans</option><option>Salomon</option><option>Yeezy</option><option>Reebok</option><option>Другие</option></select></label><label>Категория<select name="category"><option value="running">Running</option><option value="street">Streetwear</option><option value="classic">Classic</option></select></label><label>URL фото<input name="image" type="url" placeholder="https://..."></label><label class="wide">Описание<textarea name="desc" rows="2" required placeholder="Коротко о модели"></textarea></label><button class="button button-primary" type="submit">Добавить товар +</button></form><div class="admin-list">${products.map(p=>`<div class="admin-list-item"><img src="${p.image}" alt=""><div class="admin-item-copy"><strong>${escapeHtml(p.name)}</strong><small>${money(p.price)} · ${p.category}</small></div><button data-admin-delete-product="${p.id}">Удалить</button></div>`).join("")}</div><p class="admin-note">Товары, новости, отзывы, заказы и промокоды управляются через Supabase.</p>`;
+  $("#adminProductForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin){showToast("Сначала войди как администратор");return}const d=new FormData(e.currentTarget);const category=d.get("category");const product={name:d.get("name").trim(),brand:String(d.get("brand")||"Другие"),category,type:category.toUpperCase()+" / CUSTOM",price:Number(d.get("price"))},oldPrice:null,label:"NEW",desc:d.get("desc").trim(),image:d.get("image").trim()||"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85",sizes:[39,40,41,42,43,44,45]};const {error}=await supabaseClient.from("products").insert(productToRow(product));if(error){console.error(error);showToast("Не удалось сохранить товар. Проверь политики Supabase");return}await refreshProductsFromDb();renderAdmin();e.currentTarget.reset();showToast("Товар сохранён в Supabase")});
  }else if(adminTab==="promos"){
    const {data:promoRows,error}=await supabaseClient.from("promo_codes").select("id,code,discount_percent,is_active,max_uses,used_count,expires_at").order("created_at",{ascending:false});
    if(error){console.error("Promo list failed:",error);root.innerHTML='<div class="admin-empty">Не удалось загрузить промокоды. Выполни SQL-миграцию promo-codes.sql.</div>';return}
