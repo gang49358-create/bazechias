@@ -84,7 +84,8 @@ function cartQuantity(){return cart.reduce((sum,x)=>sum+x.qty,0)}
 function cartTotal(){return cart.reduce((sum,x)=>{const p=products.find(item=>item.id===x.id);return sum+(p?p.price*x.qty:0)},0)}
 function renderCart(){
   $("#cartCount").textContent=cartQuantity();$("#drawerCount").textContent=`(${cartQuantity()})`;
-  $("#cartTotal").textContent=money(cartTotal());$("#checkoutTotal").textContent=money(cartTotal());
+  $("#cartTotal").textContent=money(Math.max(0,cartTotal()-promoDiscount()));$("#checkoutTotal").textContent=money(Math.max(0,cartTotal()-promoDiscount()));
+  const promoLine=$("#promoDiscountLine");if(promoLine){promoLine.hidden=!appliedPromo;promoLine.textContent=appliedPromo?"Промокод "+appliedPromo.code+": −"+money(promoDiscount()):"";}
   const empty=cart.length===0;$("#cartEmpty").style.display=empty?"block":"none";$("#cartBottom").style.display=empty?"none":"block";
   $("#cartItems").innerHTML=cart.map(item=>{const p=products.find(x=>x.id===item.id);if(!p)return "";return `<div class="cart-line"><img src="${p.image}" alt=""><div><h3>${p.name}</h3><p>Размер: EU ${item.size}</p><span class="line-price">${money(p.price)}</span><div class="qty-control"><button data-qty="${p.id}" data-size="${item.size}" data-delta="-1" aria-label="Уменьшить">−</button><span>${item.qty}</span><button data-qty="${p.id}" data-size="${item.size}" data-delta="1" aria-label="Увеличить">+</button></div></div><button class="remove-item" data-remove="${p.id}" data-size="${item.size}" aria-label="Удалить">×</button></div>`}).join("");
 }
@@ -132,13 +133,14 @@ $("#checkoutForm").addEventListener("submit",async e=>{
  const items=cart.map(item=>({product_id:Number(item.id),size:Number(item.size),quantity:Number(item.qty)}));
  submitButton.disabled=true;submitButton.textContent="Сохраняем заказ…";
  try{
-  const {data:orderId,error}=await supabaseClient.rpc("create_store_order",{
+  const {data:orderId,error}=await supabaseClient.rpc("create_store_order_with_promo",{
    p_customer_name:String(data.get("name")||"").trim(),
    p_phone:String(data.get("phone")||"").trim(),
    p_address:String(data.get("address")||"").trim(),
    p_items:items,
    p_email:String(data.get("email")||"").trim()||null,
-   p_comment:"Способ доставки: "+String(data.get("delivery")||"Курьер")
+   p_comment:"Способ доставки: "+String(data.get("delivery")||"Курьер"),
+   p_promo_code:appliedPromo?.code||null
   });
   if(error)throw error;
   if(!orderId)throw new Error("База не вернула номер заказа");
@@ -176,6 +178,9 @@ const defaultNews=[
 let reviews=[];
 let newsItems=[];
 let adminTab="products";
+let appliedPromo=null;
+function promoDiscount(){return appliedPromo?Math.round(cartTotal()*appliedPromo.discount_percent/100):0;}
+function promoCodeValue(){return String($("#promoCodeInput")?.value||"").trim().toUpperCase();}
 function mapNewsRow(row){
  let displayDate = "НОВОСТЬ";
  if (row.date) {
@@ -269,7 +274,12 @@ function renderAdmin(){
  }else if(adminTab==="products"){
   root.innerHTML=`<form class="admin-form" id="adminProductForm"><label>Название<input name="name" required placeholder="Название модели"></label><label>Цена, ₽<input name="price" type="number" min="1" required placeholder="7990"></label><label>Категория<select name="category"><option value="running">Running</option><option value="street">Streetwear</option><option value="classic">Classic</option></select></label><label>URL фото<input name="image" type="url" placeholder="https://..."></label><label class="wide">Описание<textarea name="desc" rows="2" required placeholder="Коротко о модели"></textarea></label><button class="button button-primary" type="submit">Добавить товар +</button></form><div class="admin-list">${products.map(p=>`<div class="admin-list-item"><img src="${p.image}" alt=""><div class="admin-item-copy"><strong>${escapeHtml(p.name)}</strong><small>${money(p.price)} · ${p.category}</small></div><button data-admin-delete-product="${p.id}">Удалить</button></div>`).join("")}</div><p class="admin-note">Товары сохраняются в Supabase. Новости и отзывы пока остаются в демо-режиме этого браузера.</p>`;
   $("#adminProductForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin){showToast("Сначала войди как администратор");return}const d=new FormData(e.currentTarget);const category=d.get("category");const product={name:d.get("name").trim(),category,type:category.toUpperCase()+" / CUSTOM",price:Number(d.get("price")),oldPrice:null,label:"NEW",desc:d.get("desc").trim(),image:d.get("image").trim()||"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85",sizes:[39,40,41,42,43,44,45]};const {error}=await supabaseClient.from("products").insert(productToRow(product));if(error){console.error(error);showToast("Не удалось сохранить товар. Проверь политики Supabase");return}await refreshProductsFromDb();renderAdmin();e.currentTarget.reset();showToast("Товар сохранён в Supabase")});
- }else if(adminTab==="news"){
+ }else if(adminTab==="promos"){
+   const {data:promoRows,error}=await supabaseClient.from("promo_codes").select("id,code,discount_percent,is_active,max_uses,used_count,expires_at").order("created_at",{ascending:false});
+   if(error){console.error("Promo list failed:",error);root.innerHTML='<div class="admin-empty">Не удалось загрузить промокоды. Выполни SQL-миграцию promo-codes.sql.</div>';return}
+   root.innerHTML='<form class="admin-form" id="adminPromoForm"><label>Код<input name="code" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_-]+" placeholder="BAZE10"></label><label>Скидка, %<input name="discount_percent" type="number" min="1" max="80" required value="10"></label><label>Лимит активаций<input name="max_uses" type="number" min="1" placeholder="Без лимита"></label><label>Действует до<input name="expires_at" type="date"></label><button class="button button-primary" type="submit">Создать промокод +</button></form><div class="admin-list">' + promoRows.map(p=>'<article class="admin-list-item"><div class="admin-item-copy"><strong>'+escapeHtml(p.code)+' · '+p.discount_percent+'%</strong><small>'+(p.is_active?"Активен":"Отключён")+' · использован '+(p.used_count||0)+(p.max_uses?" / "+p.max_uses:"")+(p.expires_at?" · до "+escapeHtml(p.expires_at):"")+'</small></div><button data-promo-toggle="'+p.id+'" data-active="'+p.is_active+'">'+(p.is_active?"Отключить":"Включить")+'</button><button data-promo-delete="'+p.id+'">Удалить</button></article>').join("")+'</div><p class="admin-note">Скидка пересчитывается на сервере при оформлении заказа. Максимальная скидка — 80%.</p>';
+   $("#adminPromoForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin){showToast("Нет прав администратора");return}const d=new FormData(e.currentTarget);const payload={code:String(d.get("code")).trim().toUpperCase(),discount_percent:Number(d.get("discount_percent")),max_uses:d.get("max_uses")?Number(d.get("max_uses")):null,expires_at:d.get("expires_at")||null,is_active:true};const {error}=await supabaseClient.from("promo_codes").insert(payload);if(error){console.error("Promo create failed:",error);showToast("Не удалось создать промокод: "+error.message);return}showToast("Промокод создан");renderAdmin()});
+  }else if(adminTab==="news"){
   root.innerHTML=`<form class="admin-form" id="adminNewsForm"><label>Заголовок<input name="title" required placeholder="Заголовок новости"></label><label>Категория<input name="tag" placeholder="BRAND NOTES" value="BAZE NEWS"></label><label class="wide">Текст<textarea name="text" required minlength="10" rows="3" placeholder="Текст новости"></textarea></label><button class="button button-primary" type="submit">Опубликовать новость +</button></form><div class="admin-list">${newsItems.map(n=>`<div class="admin-list-item"><div class="admin-item-copy"><strong>${escapeHtml(n.title)}</strong><small>${escapeHtml(n.tag||"BAZE NEWS")} · ${escapeHtml(n.date||"")}</small></div><button data-admin-delete-news="${n.id}">Удалить</button></div>`).join("")||'<div class="admin-empty">Опубликованных новостей пока нет.</div>'}</div>`;
   $("#adminNewsForm").addEventListener("submit", async e => {
    e.preventDefault();
@@ -379,6 +389,8 @@ $("#adminDashboard").addEventListener("change",async e=>{
 });
 $("#adminDashboard").addEventListener("click",e=>{
  const tab=e.target.closest("[data-admin-tab]");if(tab){adminTab=tab.dataset.adminTab;renderAdmin();return}
+ const pt=e.target.closest("[data-promo-toggle]");if(pt){(async()=>{if(!isAdmin)return;const {error}=await supabaseClient.from("promo_codes").update({is_active:pt.dataset.active!=="true"}).eq("id",Number(pt.dataset.promoToggle));if(error){showToast("Не удалось изменить промокод");console.error(error);return}renderAdmin()})();return}
+ const pd=e.target.closest("[data-promo-delete]");if(pd){(async()=>{if(!isAdmin)return;if(!confirm("Удалить промокод?"))return;const {error}=await supabaseClient.from("promo_codes").delete().eq("id",Number(pd.dataset.promoDelete));if(error){showToast("Не удалось удалить промокод");console.error(error);return}renderAdmin()})();return}
  const dp=e.target.closest("[data-admin-delete-product]");if(dp){(async()=>{const id=Number(dp.dataset.adminDeleteProduct);if(!isAdmin){showToast("Нет прав администратора");return}const {error}=await supabaseClient.from("products").delete().eq("id",id);if(error){console.error(error);showToast("Не удалось удалить товар");return}await refreshProductsFromDb();renderAdmin();showToast("Товар удалён из Supabase")})();return}
  const dn=e.target.closest("[data-admin-delete-news]");if(dn){(async()=>{if(!isAdmin){showToast("Нет прав администратора");return}const id=dn.dataset.adminDeleteNews;const {error}=await supabaseClient.from("news_items").delete().eq("id",id);if(error){console.error("News delete failed:",error);showToast("Не удалось удалить новость: "+error.message);return}newsItems=newsItems.filter(n=>String(n.id)!==String(id));renderNews();renderAdmin();showToast("Новость удалена из Supabase")})();return}
  const dr=e.target.closest("[data-admin-delete-review]");if(dr){(async()=>{if(!isAdmin){showToast("Нет прав администратора");return}const id=dr.dataset.adminDeleteReview;const {error}=await supabaseClient.from("reviews").delete().eq("id",id);if(error){console.error("Review delete failed:",error);showToast("Не удалось удалить отзыв: "+error.message);return}reviews=reviews.filter(r=>String(r.id)!==String(id));renderReviews();renderAdmin();showToast("Отзыв удалён")})();return}
@@ -479,3 +491,7 @@ window.addEventListener("appinstalled",()=>{if(installButton)installButton.hidde
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
  window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(err=>console.warn("PWA offline cache unavailable:",err)));
 }
+
+// BAZE promo validation; checkout recalculates the discount securely on the server.
+$("#applyPromoBtn").addEventListener("click",async()=>{const code=promoCodeValue();const status=$("#promoStatus");const button=$("#applyPromoBtn");if(!code){status.textContent="Введи промокод.";return}button.disabled=true;button.textContent="Проверяем…";try{const {data,error}=await supabaseClient.rpc("validate_store_promo",{p_code:code,p_subtotal:cartTotal()});if(error)throw error;const result=Array.isArray(data)?data[0]:data;if(!result||!result.valid){appliedPromo=null;status.textContent=result?.message||"Промокод недействителен или срок его действия истёк.";showToast("Промокод не подошёл")}else{appliedPromo={code,discount_percent:Number(result.discount_percent)};status.textContent=code+" активирован · скидка "+appliedPromo.discount_percent+"%";showToast("Скидка Baze активирована")}renderCart()}catch(err){console.error("Promo validation failed:",err);status.textContent="Не удалось проверить код. Выполни SQL-миграцию в Supabase."}finally{button.disabled=false;button.textContent="Применить"}});
+$("#promoCodeInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("#applyPromoBtn").click()}});
