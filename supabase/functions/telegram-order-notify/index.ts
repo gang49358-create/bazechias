@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
       `${base}/rest/v1/orders?id=eq.${encodeURIComponent(String(orderId))}&select=id,customer_name,phone,email,delivery_address,customer_comment,status,total,created_at`,
       { headers },
     );
-    if (!orderResponse.ok) throw new Error("Could not load order");
+    if (!orderResponse.ok) { const detail = await orderResponse.text(); console.error("orders REST error", orderResponse.status, detail.slice(0, 300)); throw new Error(`orders REST HTTP ${orderResponse.status}: ${detail.slice(0, 200)}`); }
     const orders = await orderResponse.json();
     const order = orders?.[0];
     if (!order) return new Response("Order not found", { status: 404, headers: corsHeaders });
@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
       `${base}/rest/v1/telegram_order_notifications?order_id=eq.${encodeURIComponent(String(orderId))}&select=order_id`,
       { headers },
     );
-    if (!dedupeResponse.ok) throw new Error("Could not check notification status");
+    if (!dedupeResponse.ok) { const detail = await dedupeResponse.text(); console.error("dedupe REST error", dedupeResponse.status, detail.slice(0, 300)); throw new Error(`notification-check REST HTTP ${dedupeResponse.status}: ${detail.slice(0, 200)}`); }
     if ((await dedupeResponse.json()).length) {
       return new Response(JSON.stringify({ ok: true, duplicate: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
       `${base}/rest/v1/order_items?order_id=eq.${encodeURIComponent(String(orderId))}&select=product_name,size,quantity,unit_price`,
       { headers },
     );
-    if (!itemsResponse.ok) throw new Error("Could not load order items");
+    if (!itemsResponse.ok) { const detail = await itemsResponse.text(); console.error("order_items REST error", itemsResponse.status, detail.slice(0, 300)); throw new Error(`order_items REST HTTP ${itemsResponse.status}: ${detail.slice(0, 200)}`); }
     const items = await itemsResponse.json();
     const itemLines = (items ?? []).map((item: any) =>
       `• ${escapeHtml(item.product_name)} — EU ${escapeHtml(item.size)} × ${escapeHtml(item.quantity)} — ${Number(item.unit_price * item.quantity).toLocaleString("ru-RU")} ₽`
@@ -110,13 +110,14 @@ Deno.serve(async (req: Request) => {
       headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
       body: JSON.stringify({ order_id: orderId, sent_at: new Date().toISOString() }),
     });
-    if (!logResponse.ok) throw new Error("Notification sent but logging failed");
+    if (!logResponse.ok) { const detail = await logResponse.text(); console.error("notification log REST error", logResponse.status, detail.slice(0, 300)); throw new Error(`notification-log REST HTTP ${logResponse.status}: ${detail.slice(0, 200)}`); }
 
     return new Response(JSON.stringify({ ok: true, recipients: sentTo.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("telegram-order-notify:", error);
-    return new Response("Notification failed", { status: 500, headers: corsHeaders });
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("telegram-order-notify:", message);
+    return new Response(JSON.stringify({ ok: false, error: message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
