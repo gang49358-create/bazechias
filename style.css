@@ -355,3 +355,6 @@ button:hover,.button:hover,a.button:hover,input[type="button"]:hover,input[type=
 }
 .filter.active,.size-option.selected,.admin-tab.active,.favorite.active {background:#000 !important;color:#fff !important;border-color:#000 !important}
 button:disabled,.button:disabled,input[type="submit"]:disabled {background:#222 !important;color:#aaa !important;border-color:#222 !important;opacity:.7}
+
+/* BAZE promo-code module */
+.promo-box{margin:18px 0 14px;padding:16px;background:linear-gradient(135deg,#111d33,#0a1221);border:1px solid #8eafff38;border-radius:4px}.promo-box>label{display:block;margin-bottom:9px;color:#b8c9eb;font-size:9px;font-weight:800;letter-spacing:.18em}.promo-row{display:flex;gap:8px}.promo-row input{min-width:0;flex:1;padding:12px 13px;background:#070d18;color:#edf3ff;border:1px solid #425474;border-radius:2px;font:600 12px Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase}.promo-row button{padding:0 14px;background:#000;color:#fff;border:1px solid #000;border-radius:2px;font:700 10px Manrope,sans-serif;letter-spacing:.06em}.promo-box small{display:block;margin-top:9px;color:#91a3c3;font-size:10px;line-height:1.5}.promo-discount-line{margin-top:8px;color:#b9d0ff;font-size:11px;font-weight:700}.promo-row button:disabled{opacity:.55}
