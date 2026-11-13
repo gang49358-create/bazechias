@@ -1,5 +1,5 @@
-const CACHE_NAME="baze-china-blue-v12";
-const CORE=["./","./index.html","./style.css?v=20261113-brand-fit","./script-hotfix.js?v=20261113-hotfix2","./manifest.webmanifest","./baze-icon.svg"];
+const CACHE_NAME="baze-china-blue-v13";
+const CORE=["./","./index.html","./style.css?v=20261113-brand-fit","./script-hotfix.js?v=20261113-hotfix3","./manifest.webmanifest","./baze-icon.svg"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",event=>{
