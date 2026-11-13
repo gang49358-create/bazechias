@@ -1,7 +1,7 @@
 -- Run once in Supabase SQL Editor.
 -- Stores only order IDs already notified; no customer data is copied here.
 create table if not exists public.telegram_order_notifications (
-  order_id bigint primary key,
+  order_id text primary key,
   sent_at timestamptz not null default now()
 );
 
