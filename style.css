@@ -762,3 +762,19 @@ select{background:#0b1d3c!important;color:#dceaff!important}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:#6ab5ff!important}
 @media(max-width:900px){.nav{border-radius:16px!important;padding:12px!important}.nav a{border-radius:10px!important}}
 @media(max-width:680px){.brand-mark{width:36px!important;height:36px!important}.nav{background:#071329!important;border-color:#244a7d!important}.nav a{padding:12px!important}.header{background:#061329!important}}
+
+
+/* Discount feature strip */
+.discounts-strip{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:34px;padding:34px 7.2%;background:linear-gradient(105deg,#0b1f42,#123b79 58%,#0b1c39);border-block:1px solid #28518a;color:#eef6ff;position:relative;overflow:hidden}
+.discounts-strip:after{content:"";position:absolute;width:300px;height:300px;border:1px solid #75b5ff22;border-radius:50%;right:16%;top:50%;transform:translateY(-50%);box-shadow:0 0 0 35px #75b5ff0a,0 0 0 70px #75b5ff07;pointer-events:none}
+.discounts-mark{font:700 27px "Oswald",sans-serif;color:#fff;letter-spacing:-1px;border-right:1px solid #ffffff2b;padding-right:28px;white-space:nowrap}
+.discounts-mark span{display:block;font:700 9px "Inter",sans-serif;color:#73b4ff;letter-spacing:2px;margin-top:5px}
+.discounts-copy{position:relative;z-index:1}
+.discounts-kicker{font-size:8px;letter-spacing:2.5px;color:#7fbaff;font-weight:900}
+.discounts-copy h2{font:700 clamp(21px,3vw,34px) "Oswald",sans-serif;letter-spacing:.3px;margin:7px 0;color:#f4f8ff}
+.discounts-copy h2 em{font-style:normal;color:#67b1ff}
+.discounts-copy p{font-size:10px;color:#a7bfdf;margin:0}
+.discounts-link{position:relative;z-index:1;padding:14px 18px;border:1px solid #69aaff;color:#eaf4ff;font-size:9px;font-weight:900;letter-spacing:1.2px;white-space:nowrap;transition:background .2s}
+.discounts-link:hover{background:#246bff}
+.discounts-link span{margin-left:15px;color:#7fc0ff}
+@media(max-width:680px){.discounts-strip{grid-template-columns:auto 1fr;gap:16px;padding:25px 20px}.discounts-mark{padding-right:15px}.discounts-link{grid-column:1/-1;text-align:center}.discounts-copy h2{font-size:24px}}
