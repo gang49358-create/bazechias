@@ -683,3 +683,82 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(max-width:900px){.header{padding:0 18px!important}.nav{background:#080808!important}.nav.open{background:#080808!important}}
 @media(max-width:680px){.hero{min-height:760px!important}.hero h1{font-size:clamp(54px,13vw,82px)!important;letter-spacing:-1px!important}.section-head{align-items:flex-start!important}.section-head h2{font-size:clamp(36px,9vw,56px)!important}.product-card{border-radius:0!important}.cart-drawer{padding:20px!important}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+/* BAZE CHINA — BLUE IDENTITY REFRESH */
+:root{--accent:#246bff;--accent-hot:#4388ff;--blue:#246bff;--cyan:#59baff;--navy:#06152f;--line:rgba(93,157,255,.2)}
+body{background:#071329;color:#eaf2ff}
+.announcement{background:#0a1d40!important;color:#c8ddff!important;border-bottom:1px solid #183c70}
+.pulse{background:#4d9bff!important;box-shadow:0 0 14px #398bff!important}
+.header{background:rgba(5,17,39,.96)!important;border-bottom:1px solid #17345f!important;backdrop-filter:blur(18px)}
+.brand{color:#f4f8ff!important;gap:12px;letter-spacing:1.8px}
+.brand-mark{width:42px!important;height:42px!important;display:grid;place-items:center!important;background:linear-gradient(145deg,#4aa2ff,#1552d8)!important;color:#fff!important;border:1px solid #8cc4ff!important;box-shadow:0 0 0 4px #246bff20,0 8px 24px #0754cf55!important;transform:none!important;font-family:"Oswald",sans-serif!important;font-size:17px!important;letter-spacing:-1px!important;clip-path:polygon(0 0,100% 0,100% 78%,78% 100%,0 100%)}
+.brand-light{color:#6faeff!important;font-weight:800!important}
+.nav{gap:7px!important;padding:6px!important;background:#0a1b39!important;border:1px solid #1b3b68!important;border-radius:999px!important}
+.nav a{padding:11px 13px!important;border-radius:999px!important;color:#a8bbd9!important;font-size:10px!important;font-weight:800!important;letter-spacing:.3px!important;transition:background .2s,color .2s,transform .2s}
+.nav a:hover,.nav a:focus-visible{background:#1d5bd0!important;color:#fff!important;transform:translateY(-1px)}
+.icon-btn,.menu-toggle{color:#d9eaff!important}
+.cart-button{background:linear-gradient(110deg,#164fc4,#287bff)!important;border:1px solid #5798ff!important;border-radius:999px!important;box-shadow:0 8px 24px #0754cf44}
+.cart-button b{background:#fff!important;color:#1757cb!important;border-radius:50%!important}
+.hero{background:radial-gradient(ellipse at 72% 38%,#123c83 0,#0a2451 34%,#061329 76%)!important}
+.hero:before{background:radial-gradient(circle,rgba(35,112,255,.28),transparent 68%)!important}
+.hero h1 span{-webkit-text-stroke:1.5px #5aa7ff!important}
+.hero-ring{border-color:#428cff55!important;box-shadow:0 0 0 36px #246bff18,0 0 0 78px #246bff0d!important}
+.orb-one{background:radial-gradient(circle,rgba(36,107,255,.48),transparent 68%)!important}
+.orb-two{border-color:#428cff99!important}
+.floating-tag{background:#081b39eF!important;border-color:#28528a!important;color:#d9eaff!important}
+.ticker{background:linear-gradient(90deg,#1246b5,#267aff,#1246b5)!important}
+.ticker-track span:nth-child(even){color:#dceaff!important}
+.section{background:#071329!important;color:#eaf2ff!important}
+.section-head{border-color:#1c3963!important}
+.section-head h2 span,.manifesto-copy h2 span,.newsletter h2 span{color:#59a9ff!important;-webkit-text-fill-color:#59a9ff!important}
+.eyebrow{color:#80a5d9!important}.eyebrow-line{background:#438fff!important}
+.filter.active,.filter:hover{background:#1d5edb!important;border-color:#438fff!important}
+.search-box,select{border-color:#24446f!important}
+select{background:#0b1d3c!important;color:#dceaff!important}
+.product-card,.review-grid .review-card,.news-section .news-card{background:linear-gradient(155deg,#102447,#0a1933)!important;border-color:#1c3c68!important}
+.product-card:hover{border-color:#438fff!important;box-shadow:0 20px 50px #00102c99!important}
+.product-image{background:radial-gradient(ellipse at 50% 45%,#1b3d70,#0b1a34 76%)!important;border-color:#1b3d6b!important}
+.product-image:before{border-color:#8dbdff20!important;box-shadow:0 0 0 20px #438fff0b,0 0 0 40px #438fff08!important}
+.product-label{background:#246bff!important}
+.favorite.active{background:#246bff!important;border-color:#4b9aff!important}
+.product-name,.price{color:#f0f6ff!important}
+.product-desc,.product-meta,.catalog-footer{color:#91a8cb!important}
+.add-btn,.button-primary,.email-row button{background:linear-gradient(120deg,#1854c9,#3185ff)!important;border-color:#438fff!important;box-shadow:0 8px 22px #0b54c744!important}
+.add-btn:hover,.button-primary:hover,.email-row button:hover{background:#4a96ff!important}
+.manifesto,.creators-section{background:#0a1c39!important;border-color:#1b3c6a!important}
+.manifesto-visual,.creators-art{background:radial-gradient(circle at center,#17427e,#071329 72%)!important}
+.manifesto-orbit,.creators-orbit{border-color:#4b91ed66!important;box-shadow:0 0 0 40px #246bff18,0 0 0 80px #246bff0c!important}
+.manifesto-big,.creators-logo{color:#eaf3ff!important;text-shadow:10px 12px 0 #246bff33!important}
+.manifesto-big span,.creators-logo span{color:#58a8ff!important}
+.benefit,.creator-cards article{background:#0d2040!important;border-color:#1e416f!important;color:#eaf2ff!important}
+.benefit:hover{border-color:#438fff!important}
+.benefit-icon{background:#102d59!important;border-color:#2c5b98!important;color:#69b5ff!important}
+.benefit h3,.creator-cards article h3{color:#f1f7ff!important}
+.review-summary,.review-score{color:#eef5ff!important}.stars{color:#69b5ff!important}
+.news-section .news-card{overflow:hidden!important;transition:transform .25s,border-color .25s,box-shadow .25s!important}
+.news-section .news-card:hover{transform:translateY(-5px)!important;border-color:#438fff!important;box-shadow:0 18px 42px #00102c88!important}
+.news-section .news-card h3{color:#f2f7ff!important}
+.news-section .news-card p{color:#9ab0d0!important}
+.news-section .news-card a,.news-section .news-card button{color:#69b5ff!important}
+.order-tracking{background:#071329!important}
+.order-lookup-form,.order-lookup-result{background:#0d2040!important;border-color:#244a7d!important}
+.order-lookup-form input{background:#071329!important;border-color:#244a7d!important;color:#eef5ff!important}
+.newsletter{background:radial-gradient(circle at 76% 30%,#16417d,transparent 38%),#0a1c39!important;border-color:#1b3c6a!important}
+.newsletter h2{color:#f1f7ff!important}
+.newsletter p,.newsletter-form small{color:#9ab0d0!important}
+.email-row{border-color:#315786!important}.email-row input{background:transparent!important;color:#eef5ff!important}
+.newsletter-decoration{color:#438fff12!important}
+.footer{background:#040d1d!important;border-color:#1b3b67!important;color:#7894bd!important}
+.footer .brand{color:#f0f6ff!important}
+.overlay{background:#020b1ddd!important}
+.cart-drawer,.modal-card{background:#0a1a34!important;border-color:#24436e!important;color:#eaf2ff!important}
+.drawer-head,.cart-line,.cart-bottom{border-color:#24436e!important}
+.cart-line img,.modal-product-image{background:#10284d!important}
+.qty-control button,.close-btn,.modal-close{background:#10284d!important;border-color:#315987!important;color:#eaf2ff!important}
+.promo-box{background:#102447!important;border-color:#2b5790!important}
+.promo-row input,.checkout-form input,.checkout-form select,.admin-login input{background:#071329!important;border-color:#315987!important;color:#eef5ff!important}
+.toast{background:#102b53!important;border-color:#438fff!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:#6ab5ff!important}
+@media(max-width:900px){.nav{border-radius:16px!important;padding:12px!important}.nav a{border-radius:10px!important}}
+@media(max-width:680px){.brand-mark{width:36px!important;height:36px!important}.nav{background:#071329!important;border-color:#244a7d!important}.nav a{padding:12px!important}.header{background:#061329!important}}
