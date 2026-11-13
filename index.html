@@ -141,7 +141,7 @@
     <div class="drawer-head"><div><span class="eyebrow">YOUR SELECTION</span><h2>Корзина <span id="drawerCount">(0)</span></h2></div><button class="close-btn" id="closeCart" aria-label="Закрыть корзину">×</button></div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-empty" id="cartEmpty"><div class="empty-symbol">▱</div><h3>Пока пусто</h3><p>Каждое большое движение начинается с первой пары.</p><button class="button button-primary" id="continueShopping">В каталог <span>↗</span></button></div>
-    <div class="cart-bottom" id="cartBottom"><div class="subtotal"><span>Итого</span><strong id="cartTotal">0 ₽</strong></div><p>Стоимость доставки рассчитывается при оформлении.</p><button class="button button-primary checkout-btn" id="checkoutBtn">Оформить заказ <span>↗</span></button><small>Демо-магазин: оплата не списывается.</small></div>
+    <div class="cart-bottom" id="cartBottom"><div class="promo-box"><label for="promoCodeInput">ПРОМОКОД BAZE</label><div class="promo-row"><input id="promoCodeInput" type="text" maxlength="32" placeholder="Введи код"><button type="button" id="applyPromoBtn">Применить</button></div><small id="promoStatus" aria-live="polite">Введи промокод, чтобы активировать скидку.</small><div id="promoDiscountLine" class="promo-discount-line" hidden></div></div><div class="subtotal"><span>Итого</span><strong id="cartTotal">0 ₽</strong></div><p>Стоимость доставки рассчитывается при оформлении.</p><button class="button button-primary checkout-btn" id="checkoutBtn">Оформить заказ <span>↗</span></button><small>Демо-магазин: оплата не списывается.</small></div>
   </aside>
 
   <div class="modal-wrap" id="productModal" role="dialog" aria-modal="true" aria-label="Информация о товаре">
@@ -158,7 +158,7 @@
     <div class="modal-card admin-card"><button class="close-btn modal-close" id="closeAdmin" aria-label="Закрыть">×</button><div class="eyebrow"><span class="eyebrow-line"></span> BAZE CONTROL</div><h2>АДМИН <span>ПАНЕЛЬ.</span></h2><p class="admin-warning">Вход через Supabase Auth; права администратора проверяются по базе. Товары и заказы хранятся в Supabase. Новости и отзывы пока в демо-режиме.</p>
       <div class="admin-login" id="adminLogin"><label>Email администратора<input id="adminEmail" type="email" autocomplete="username" placeholder="admin@example.com" required></label><label>Пароль<input id="adminPassword" type="password" autocomplete="current-password" placeholder="Пароль Supabase" required></label><button class="button button-primary" id="adminLoginBtn">Войти <span>↗</span></button><small>Вход через Supabase Auth. Доступ есть только у аккаунта, добавленного в список администраторов.</small></div>
       <div id="adminDashboard" hidden>
-        <div class="admin-tabs"><button class="admin-tab active" data-admin-tab="products">Товары</button><button class="admin-tab" data-admin-tab="orders">Заказы</button><button class="admin-tab" data-admin-tab="news">Новости</button><button class="admin-tab" data-admin-tab="reviews">Отзывы</button></div>
+        <div class="admin-tabs"><button class="admin-tab active" data-admin-tab="products">Товары</button><button class="admin-tab" data-admin-tab="orders">Заказы</button><button class="admin-tab" data-admin-tab="promos">Промокоды</button><button class="admin-tab" data-admin-tab="news">Новости</button><button class="admin-tab" data-admin-tab="reviews">Отзывы</button></div>
         <div id="adminPanelContent"></div>
       </div>
     </div>
