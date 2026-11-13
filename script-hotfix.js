@@ -268,7 +268,8 @@ function renderReviews(){
  $(".review-summary small").textContent=`${reviews.length} отзыв(ов) · отзывы загружаются из базы`;
 }
 function renderNews(){
- $("#newsGrid").innerHTML=newsItems.length?newsItems.map(n=>`<article class="news-card"><div class="news-image"><span>${escapeHtml(n.symbol||"B/C")}</span></div><div class="news-body"><div class="news-meta">${escapeHtml(n.tag||"BAZE NEWS")} · ${escapeHtml(n.date||"НОВОСТЬ")}</div><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p><button class="news-read" data-news-read="${n.id}">Читать заметку ↗</button></div></article>`).join(""):`<div class="admin-empty">Новостей пока нет.</div>`;
+ const ordered=[...newsItems].sort((a,b)=>new Date(b.created_at||b.date||0)-new Date(a.created_at||a.date||0));
+ $("#newsGrid").innerHTML=ordered.length?ordered.map((n,index)=>`<article class="news-card ${index===0?"news-card-featured":"news-card-compact"}"><div class="news-image"><span>${escapeHtml(n.symbol||"B/C")}</span>${index===0?'<small class="news-feature-label">В ФОКУСЕ / 01</small>':""}</div><div class="news-body"><div class="news-meta">${escapeHtml(n.tag||"BAZE NEWS")} · ${escapeHtml(n.date||"НОВОСТЬ")}</div><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p><button class="news-read" data-news-read="${n.id}">Читать заметку ↗</button></div></article>`).join(""):`<div class="admin-empty">Новостей пока нет.</div>`;
 }
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
 function openReview(){ $("#reviewModal").classList.add("open");document.body.classList.add("locked")}
