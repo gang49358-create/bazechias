@@ -831,3 +831,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .review-grid>.admin-empty{grid-column:1/-1;padding:25px;border:1px dashed #315987;border-radius:12px;background:#0d2040;color:#9ab4d8}
 @media(max-width:850px){.news-grid,.review-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.review-summary{grid-template-columns:150px 1fr!important}.review-summary>.button{grid-column:1/-1;width:100%}}
 @media(max-width:560px){.news-grid,.review-grid{grid-template-columns:1fr!important}.review-summary{grid-template-columns:1fr!important;padding:18px!important}.review-rating-panel{border-right:0;border-bottom:1px solid #2c4b75;padding:0 0 14px}.news-section-stamp{font-size:7px;letter-spacing:1px}.news-image{height:135px!important}}
+
+/* BAZE CHINA — full product photography + Poizon-style brand directory */
+.product-image{height:300px!important;min-height:300px!important;display:grid!important;place-items:center!important;overflow:hidden!important;position:relative!important;background:radial-gradient(ellipse at 50% 48%,#18365f 0%,#0b1d3a 72%)!important}
+.product-image img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;padding:18px!important;box-sizing:border-box!important;transform:none!important;mix-blend-mode:normal!important;filter:drop-shadow(0 16px 18px #00102b88)!important}
+.product-card:hover .product-image img{transform:scale(1.025)!important;filter:drop-shadow(0 20px 22px #00102baa)!important}
+.product-image:before{pointer-events:none!important}
+.product-image.image-unavailable:after{content:"ФОТО НЕДОСТУПНО";position:absolute;inset:auto 12px 12px;text-align:center;color:#a9c7ee;font-size:9px;letter-spacing:1px}
+.brand-filter-wrap{margin:24px 0 12px;padding:18px 0 16px;border-top:1px solid #24446f;border-bottom:1px solid #24446f}
+.brand-filter-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px;color:#a9c9f4;font-size:10px;font-weight:900;letter-spacing:1.7px}
+.brand-filter-heading small{color:#6688b4;font-size:8px;letter-spacing:1.3px}
+.brand-filters{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin;scrollbar-color:#246bff #0b1d3a}
+.brand-filter{display:inline-flex!important;align-items:center!important;gap:12px!important;flex:0 0 auto!important;min-height:42px!important;padding:0 15px!important;border:1px solid #315987!important;border-radius:3px!important;background:#0b1d3a!important;color:#cfe4ff!important;font-size:10px!important;font-weight:800!important;letter-spacing:.7px!important;white-space:nowrap!important}
+.brand-filter small{color:#83bfff!important;font-size:9px!important}
+.brand-filter.active,.brand-filter:hover{background:linear-gradient(120deg,#1854c9,#3185ff)!important;border-color:#62b8ff!important;color:#fff!important}
+.brand-filter.active small,.brand-filter:hover small{color:#fff!important}
+.product-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.modal-product-image.product-3d-viewer{overflow:hidden!important}
+.product-3d-stage img{width:100%!important;height:100%!important;max-height:100%!important;min-height:0!important;object-fit:contain!important;mix-blend-mode:normal!important;padding:20px!important;box-sizing:border-box!important}
+@media(max-width:680px){.product-image{height:clamp(190px,58vw,260px)!important;min-height:190px!important}.product-image img{padding:12px!important}.brand-filter-wrap{margin-top:16px}.brand-filter{min-height:39px!important;padding:0 12px!important}}
