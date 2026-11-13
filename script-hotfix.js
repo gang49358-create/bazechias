@@ -146,7 +146,7 @@ $("#productGrid").addEventListener("click",e=>{
  const view=e.target.closest("[data-view]");if(view)openProduct(Number(view.dataset.view));
 });
 $("#productGrid").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-view]")){e.preventDefault();openProduct(Number(e.target.dataset.view))}});
-$(".filter[data-category]").forEach(btn=>btn.addEventListener("click",()=>{activeCategory=btn.dataset.category;$(".filter[data-category]").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()}));
+$$(".filter[data-category]").forEach(btn=>btn.addEventListener("click",()=>{activeCategory=btn.dataset.category;$$(".filter[data-category]").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()}));
 $("#brandFilters")?.addEventListener("click",e=>{const btn=e.target.closest("[data-brand]");if(!btn)return;activeBrand=btn.dataset.brand;renderProducts()});
 $("#searchInput").addEventListener("input",e=>{searchTerm=e.target.value;renderProducts()});
 $(".search-open").addEventListener("click",()=>{$("#searchInput").focus();$("#catalog").scrollIntoView({behavior:"smooth"})});
