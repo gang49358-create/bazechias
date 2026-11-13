@@ -288,7 +288,7 @@ async function loadAdminOrders(root){
   return `<article class="admin-list-item order-admin-item"><div class="admin-item-copy"><strong>Заказ №${o.id} · ${money(Number(o.total))}</strong><small>${escapeHtml(created)} · ${escapeHtml(o.customer_name)} · ${escapeHtml(o.phone)}</small><small>${o.email?escapeHtml(o.email)+" · ":""}${escapeHtml(o.delivery_address)}</small><small>${escapeHtml(o.customer_comment||"")}</small><small>${orderItems||"Состав заказа недоступен"}</small><label class="order-status-label">Статус <select data-order-status="${o.id}">${Object.entries(statuses).map(([value,label])=>`<option value="${value}" ${o.status===value?"selected":""}>${label}</option>`).join("")}</select></label></div></article>`;
  }).join("")}</div>`;
 }
-function renderAdmin(){
+async function renderAdmin(){
  adminTabButtons();const root=$("#adminPanelContent");
  if(adminTab==="orders"){
   loadAdminOrders(root);
