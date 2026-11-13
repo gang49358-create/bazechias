@@ -40,7 +40,7 @@ function inferProductBrand(product){
  const raw=String(product?.brand||"").trim();
  if(raw)return raw;
  const hay=(String(product?.name||"")+" "+String(product?.type||"")).toLowerCase();
- const brands=[["Nike",/\\bnike\\b/],["Adidas",/adidas/],["New Balance",/new\\s*balance/],["ASICS",/asics/],["Puma",/puma/],["Jordan",/jordan|\\baj\\b/],["Converse",/converse/],["Vans",/vans/],["Reebok",/reebok/],["Salomon",/salomon/],["Yeezy",/yeezy/]];
+ const brands=[["Nike",/\bnike\b/],["Adidas",/adidas/],["New Balance",/new\s*balance/],["ASICS",/asics/],["Puma",/puma/],["Jordan",/jordan|\baj\b/],["Converse",/converse/],["Vans",/vans/],["Reebok",/reebok/],["Salomon",/salomon/],["Yeezy",/yeezy/]];
  const found=brands.find(([,rx])=>rx.test(hay));return found?found[0]:"Другие";
 }
 function mapProductRow(row){
