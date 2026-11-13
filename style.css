@@ -778,3 +778,56 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .discounts-link:hover{background:#246bff}
 .discounts-link span{margin-left:15px;color:#7fc0ff}
 @media(max-width:680px){.discounts-strip{grid-template-columns:auto 1fr;gap:16px;padding:25px 20px}.discounts-mark{padding-right:15px}.discounts-link{grid-column:1/-1;text-align:center}.discounts-copy h2{font-size:24px}}
+
+
+/* Editorial news feed + community reviews refresh */
+.news-section{padding-top:76px!important;padding-bottom:76px!important;background:linear-gradient(180deg,#0a1e3d 0%,#071329 100%)!important;position:relative;overflow:hidden}
+.news-section:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#5ba5ff09 1px,transparent 1px),linear-gradient(90deg,#5ba5ff09 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 85%);pointer-events:none}
+.news-section>.section-head,.news-grid,.news-section-stamp{position:relative;z-index:1}
+.news-section .section-head{border-bottom:1px solid #2b4e7c!important;padding-bottom:24px!important}
+.news-section .section-head h2{font-size:clamp(40px,6vw,72px)!important}
+.news-section .section-head h2 span{color:#64b3ff!important;-webkit-text-fill-color:#64b3ff!important}
+.news-section-stamp{display:flex;align-items:center;gap:10px;margin:-22px 0 28px;color:#86a9d4;font-size:8px;font-weight:900;letter-spacing:1.8px}
+.news-section-stamp>span:last-child{margin-left:auto;color:#4f7eb9}
+.news-live-dot{width:7px;height:7px;border-radius:50%;background:#55b1ff;box-shadow:0 0 12px #55b1ff}
+.news-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+.news-section .news-card{display:flex!important;flex-direction:column!important;min-height:330px;background:linear-gradient(145deg,#102c55,#091a35)!important;border:1px solid #285184!important;border-radius:14px!important;overflow:hidden!important;box-shadow:0 14px 35px #0003!important}
+.news-section .news-card:hover{transform:translateY(-7px)!important;border-color:#62b3ff!important;box-shadow:0 22px 50px #00102c99!important}
+.news-image{height:150px!important;display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;padding:18px!important;background:radial-gradient(circle at 75% 30%,#347fdb 0,#16417e 34%,#0a1d3a 76%)!important;position:relative!important;overflow:hidden!important}
+.news-image:before,.news-image:after{content:"";position:absolute;border:1px solid #9bceff44;border-radius:50%;width:155px;height:155px;right:-22px;top:-72px;box-shadow:0 0 0 20px #9bceff0d,0 0 0 42px #9bceff09}
+.news-image:after{width:90px;height:90px;right:42px;top:-42px}
+.news-image span{position:relative;z-index:1;font:700 28px "Oswald",sans-serif!important;letter-spacing:1px!important;color:#e9f5ff!important;text-shadow:0 5px 18px #00102c}
+.news-body{display:flex!important;flex:1!important;flex-direction:column!important;align-items:flex-start!important;padding:20px!important}
+.news-meta{color:#73baff!important;font-size:8px!important;letter-spacing:1.5px!important}
+.news-body h3{font:700 21px "Oswald",sans-serif!important;line-height:1.25!important;color:#f2f7ff!important;margin:12px 0 9px!important}
+.news-body p{font-size:11px!important;line-height:1.8!important;color:#a1b8d9!important;margin-bottom:20px!important}
+.news-read{margin-top:auto!important;padding:10px 0 0!important;border-top:1px solid #27466f!important;width:100%;text-align:left!important;color:#72baff!important;font-size:9px!important;letter-spacing:1px!important;text-transform:uppercase!important}
+.news-read:hover{color:#fff!important}
+.news-grid>.admin-empty{grid-column:1/-1;padding:30px;border:1px dashed #315987;border-radius:12px;color:#9ab4d8;background:#0d2040}
+.reviews-section{background:#071329!important;padding-top:70px!important;padding-bottom:80px!important}
+.reviews-section .section-head h2{font-size:clamp(38px,5vw,64px)!important}
+.reviews-section .section-head h2 span{color:#68b6ff!important;-webkit-text-fill-color:#68b6ff!important}
+.review-summary{display:grid!important;grid-template-columns:190px 1fr auto!important;align-items:center!important;gap:25px!important;padding:22px!important;margin:0 0 22px!important;background:linear-gradient(110deg,#102b52,#0a1d3b)!important;border:1px solid #2a4e7e!important;border-radius:14px!important}
+.review-rating-panel{display:grid;justify-items:start;gap:4px;padding-right:20px;border-right:1px solid #2c4b75}
+.review-rating-label{font-size:8px;font-weight:900;letter-spacing:1.4px;color:#83b7f0}
+.review-score{font:700 42px "Oswald",sans-serif!important;line-height:1!important;color:#f2f8ff!important}
+.review-score span{font:500 15px "Inter",sans-serif!important;color:#83a6d1!important}
+.review-rating-panel .stars{font-size:13px!important;letter-spacing:2px;color:#67b5ff!important}
+.review-rating-panel small{font-size:8px!important;color:#91a9cb!important}
+.review-summary-copy{display:grid;gap:7px}
+.review-summary-copy strong{font:700 17px "Oswald",sans-serif;color:#f0f6ff;letter-spacing:.4px}
+.review-summary-copy span{font-size:10px;line-height:1.8;color:#9db4d4;max-width:430px}
+.review-summary>.button{white-space:nowrap}
+.review-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+.review-grid .review-card{position:relative!important;display:flex!important;flex-direction:column!important;gap:13px!important;padding:22px!important;background:linear-gradient(150deg,#102447,#0a1933)!important;border:1px solid #234574!important;border-radius:12px!important;min-height:185px!important;transition:transform .25s,border-color .25s!important}
+.review-grid .review-card:before{content:"“";position:absolute;right:18px;top:4px;font:700 65px Georgia,serif;color:#3f8de833}
+.review-grid .review-card:hover{transform:translateY(-4px)!important;border-color:#4b9fff!important}
+.review-top{display:flex!important;align-items:center!important;gap:9px!important;flex-wrap:wrap!important}
+.review-avatar{width:34px!important;height:34px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:linear-gradient(145deg,#4b9fff,#174caa)!important;color:#fff!important;font-weight:900!important}
+.review-name{font-size:11px!important;font-weight:900!important;color:#eff6ff!important}
+.review-top .stars{margin-left:auto!important;color:#71baff!important;font-size:10px!important;letter-spacing:1px}
+.review-card>p{font-size:11px!important;line-height:1.8!important;color:#b0c3df!important;margin:0!important}
+.review-date{margin-top:auto!important;padding-top:10px!important;border-top:1px solid #25436b!important;font-size:8px!important;letter-spacing:1px!important;color:#789ac4!important}
+.review-grid>.admin-empty{grid-column:1/-1;padding:25px;border:1px dashed #315987;border-radius:12px;background:#0d2040;color:#9ab4d8}
+@media(max-width:850px){.news-grid,.review-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.review-summary{grid-template-columns:150px 1fr!important}.review-summary>.button{grid-column:1/-1;width:100%}}
+@media(max-width:560px){.news-grid,.review-grid{grid-template-columns:1fr!important}.review-summary{grid-template-columns:1fr!important;padding:18px!important}.review-rating-panel{border-right:0;border-bottom:1px solid #2c4b75;padding:0 0 14px}.news-section-stamp{font-size:7px;letter-spacing:1px}.news-image{height:135px!important}}
