@@ -1,6 +1,7 @@
 // Supabase Edge Function: telegram-order-notify
 // Trigger this function from a Database Webhook on INSERT into public.orders.
 // Required secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_IDS, WEBHOOK_SECRET.
+// The Supabase secret API key is read from the platform-provided SUPABASE_SECRET_KEYS map.
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-webhook-secret",
@@ -23,8 +24,16 @@ Deno.serve(async (req: Request) => {
   const chatIds = (Deno.env.get("TELEGRAM_CHAT_IDS") ?? "")
     .split(",").map((id) => id.trim()).filter(Boolean);
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!botToken || !chatIds.length || !supabaseUrl || !serviceKey) {
+
+  let secretKey = "";
+  try {
+    const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
+    secretKey = secretKeys["baze_server"] ?? "";
+  } catch {
+    console.error("Could not read SUPABASE_SECRET_KEYS");
+  }
+
+  if (!botToken || !chatIds.length || !supabaseUrl || !secretKey) {
     return new Response("Server configuration is incomplete", { status: 500, headers: corsHeaders });
   }
 
@@ -33,7 +42,8 @@ Deno.serve(async (req: Request) => {
     const orderId = payload?.record?.id;
     if (!orderId) return new Response("Missing order id", { status: 400, headers: corsHeaders });
 
-    const headers = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
+    // Secret API keys belong in apikey only; they are not JWT bearer tokens.
+    const headers = { apikey: secretKey };
     const base = supabaseUrl.replace(/\/$/, "");
     const orderResponse = await fetch(
       `${base}/rest/v1/orders?id=eq.${encodeURIComponent(String(orderId))}&select=id,customer_name,phone,email,delivery_address,customer_comment,status,total,created_at`,
