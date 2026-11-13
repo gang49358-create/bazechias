@@ -13,7 +13,25 @@ const money = n => new Intl.NumberFormat("ru-RU").format(n) + " ₽";
 // Supabase client: publishable key is intended for browser use; database RLS protects writes.
 const SUPABASE_URL = "https://mpmdhxhhsljllouqrbtr.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_wZfkO7LLjZyX8Z0D7_b4GA_YhLXsdP9";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+// Keep the storefront usable if the optional Supabase CDN is temporarily unavailable.
+function createOfflineSupabaseFallback(){
+  const offlineError={message:"Не удалось загрузить модуль базы данных. Проверь подключение к интернету и обнови страницу."};
+  const builder={
+    select(){return this},order(){return this},eq(){return this},limit(){return this},in(){return this},
+    insert(){return this},update(){return this},delete(){return this},
+    maybeSingle(){return Promise.resolve({data:null,error:offlineError})},
+    single(){return Promise.resolve({data:null,error:offlineError})},
+    then(resolve,reject){return Promise.resolve({data:[],error:null}).then(resolve,reject)}
+  };
+  return {
+    from(){return Object.create(builder)},
+    rpc:async()=>({data:null,error:offlineError}),
+    auth:{getUser:async()=>({data:{user:null},error:offlineError}),signInWithPassword:async()=>({error:offlineError}),signOut:async()=>({error:null})}
+  };
+}
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+  : createOfflineSupabaseFallback();
 let isAdmin = false;
 let productsLoadedFromDb = false;
 const fallbackProducts = products.map(p => ({...p, sizes:[...p.sizes]}));
