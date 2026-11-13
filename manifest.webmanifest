@@ -1,14 +1,14 @@
 {
   "name": "Baze China — Sneaker Store",
   "short_name": "Baze China",
-  "description": "Baze China — streetwear и кроссовки. Move different.",
+  "description": "Baze China — кроссовки и streetwear в фирменной сине-чёрной эстетике. Move different.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#070a12",
-  "theme_color": "#080c15",
+  "background_color": "#061329",
+  "theme_color": "#071329",
   "icons": [
     {
       "src": "./baze-icon.svg",
